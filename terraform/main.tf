@@ -68,7 +68,7 @@ resource "aws_ecs_task_definition" "wordpress_task" {
     environment = [
       {
         name  = "DB_HOST"
-        value = aws_rds_instance.wordpress_db.endpoint
+        value = aws_db_instance.wordpress_db.endpoint
       },
       {
         name  = "DB_NAME"

@@ -10,7 +10,7 @@ output "ecs_service_name" {
 
 output "rds_endpoint" {
   description = "The endpoint of the RDS instance"
-  value       = aws_rds_instance.wordpress_db.endpoint
+  value       = aws_db_instance.wordpress_db.endpoint
 }
 
 output "alb_dns_name" {
