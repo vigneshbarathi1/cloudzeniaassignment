@@ -187,7 +187,6 @@ resource "aws_lb_listener" "wordpress_listener" {
   default_action {
     type             = "fixed-response"
     fixed_response {
-      status_code = 301
       message_body = "Redirecting to HTTPS"
       content_type = "text/plain"
     }
