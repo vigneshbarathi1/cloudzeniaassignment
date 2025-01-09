@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "us-east-1"  # Change to your desired AWS region
-}
-
 # SecretsManager - Store RDS credentials
 resource "aws_secretsmanager_secret" "db_credentials" {
   name = "wordpress-db-credentials"
