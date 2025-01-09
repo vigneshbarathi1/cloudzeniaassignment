@@ -40,7 +40,7 @@ variable "ecs_service_name" {
   default     = "wordpress-service"
 }
 
-# RDS settings
+# RDS
 variable "db_username" {
   description = "Database username"
   type        = string
