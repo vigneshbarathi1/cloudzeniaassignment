@@ -106,7 +106,7 @@ resource "aws_ecs_service" "wordpress_service" {
 }
 
 # RDS Instance
-resource "aws_rds_instance" "wordpress_db" {
+resource "aws_db_instance" "wordpress_db" {
   identifier        = "wordpress-db"
   instance_class    = "db.t3.micro"  # Adjust as needed
   engine            = "mysql"
@@ -228,5 +228,36 @@ resource "aws_lb_listener_rule" "https_redirect" {
       port     = "443"
       status_code = "HTTP_301"
     }
+  }
+}
+
+resource "aws_security_group" "alb_sg" {
+  name_prefix = "alb-sg"
+  description = "Allow traffic to ALB"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "WordPress-ALB-SG"
   }
 }
