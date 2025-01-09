@@ -31,7 +31,6 @@ jobs:
         role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    # Change working directory to the terraform folder and run Terraform commands
     - name: Terraform Init
       run: |
         cd terraform
@@ -58,8 +57,15 @@ jobs:
         name: terraform-plan
         path: terraform/plan.tfplan
 
+    - name: Download Plan Artifact
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: actions/download-artifact@v3
+      with:
+        name: terraform-plan
+        path: terraform/
+
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
       run: |
         cd terraform
-        terraform apply -auto-approve terraform/plan.tfplan
+        terraform apply -auto-approve plan.tfplan
