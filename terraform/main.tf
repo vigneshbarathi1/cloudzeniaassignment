@@ -8,7 +8,7 @@ resource "aws_secretsmanager_secret" "db_credentials" {
 }
 
 resource "aws_secretsmanager_secret_version" "db_credentials_version" {
-  secret_id     = aws_secretsmanager_secret.db_credentials.id
+  secret_id = aws_secretsmanager_secret.db_credentials.id
   secret_string = jsonencode({
     DB_USER     = "wordpress_user"
     DB_PASSWORD = "@admin1"
@@ -22,11 +22,11 @@ resource "aws_iam_role" "ecs_execution_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action    = "sts:AssumeRole"
+      Action = "sts:AssumeRole"
       Principal = {
         Service = "ecs-tasks.amazonaws.com"
       }
-      Effect    = "Allow"
+      Effect = "Allow"
     }]
   })
 }
@@ -37,11 +37,11 @@ resource "aws_iam_role" "ecs_task_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action    = "sts:AssumeRole"
+      Action = "sts:AssumeRole"
       Principal = {
         Service = "ecs-tasks.amazonaws.com"
       }
-      Effect    = "Allow"
+      Effect = "Allow"
     }]
   })
 }
@@ -75,13 +75,13 @@ resource "aws_ecs_task_definition" "wordpress_task" {
         value = "wordpress"
       },
       {
-        name  = "DB_USER"
+        name = "DB_USER"
         valueFrom = {
           secretRef = aws_secretsmanager_secret.db_credentials.id
         }
       },
       {
-        name  = "DB_PASSWORD"
+        name = "DB_PASSWORD"
         valueFrom = {
           secretRef = aws_secretsmanager_secret.db_credentials.id
         }
@@ -99,7 +99,7 @@ resource "aws_ecs_service" "wordpress_service" {
   launch_type     = "FARGATE"
   network_configuration {
     subnets          = var.private_subnet_ids
-    security_groups = [aws_security_group.ecs_sg.id]
+    security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = false
   }
   depends_on = [aws_ecs_task_definition.wordpress_task]
@@ -107,20 +107,20 @@ resource "aws_ecs_service" "wordpress_service" {
 
 # RDS Instance
 resource "aws_db_instance" "wordpress_db" {
-  identifier        = "wordpress-db"
-  instance_class    = "db.t3.micro"  # Adjust as needed
-  engine            = "mysql"
-  engine_version    = "8.0"
-  username          = "wordpress_user"
-  password          = "@admin1"
-  db_name           = "wordpress"
-  allocated_storage = 20
-  multi_az          = false
-  storage_type      = "gp2"
+  identifier              = "wordpress-db"
+  instance_class          = "db.t3.micro" # Adjust as needed
+  engine                  = "mysql"
+  engine_version          = "8.0"
+  username                = "wordpress_user"
+  password                = "@admin1"
+  db_name                 = "wordpress"
+  allocated_storage       = 20
+  multi_az                = false
+  storage_type            = "gp2"
   backup_retention_period = 7
-  vpc_security_group_ids = [aws_security_group.rds_sg.id]
-  db_subnet_group_name = aws_db_subnet_group.rds_subnet_group.name
-  publicly_accessible = false
+  vpc_security_group_ids  = [aws_security_group.rds_sg.id]
+  db_subnet_group_name    = aws_db_subnet_group.rds_subnet_group.name
+  publicly_accessible     = false
   tags = {
     Name = "WordPress-DB"
   }
@@ -152,30 +152,30 @@ resource "aws_security_group" "rds_sg" {
 
 # Security Group Rule to Allow ECS to RDS
 resource "aws_security_group_rule" "ecs_to_rds" {
-  type        = "ingress"
-  from_port   = 3306
-  to_port     = 3306
-  protocol    = "tcp"
-  cidr_blocks = [aws_security_group.ecs_sg.id]
+  type              = "ingress"
+  from_port         = 3306
+  to_port           = 3306
+  protocol          = "tcp"
+  cidr_blocks       = [aws_security_group.ecs_sg.id]
   security_group_id = aws_security_group.rds_sg.id
 }
 
 # ALB - Application Load Balancer
 resource "aws_lb" "wordpress_alb" {
-  name               = "wordpress-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups   = [aws_security_group.alb_sg.id]
-  subnets            = var.public_subnet_ids
+  name                       = "wordpress-alb"
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.alb_sg.id]
+  subnets                    = var.public_subnet_ids
   enable_deletion_protection = false
 }
 
 # ALB Target Group
 resource "aws_lb_target_group" "wordpress_target_group" {
-  name        = "wordpress-target-group"
-  port        = 80
-  protocol    = "HTTP"
-  vpc_id      = var.vpc_id
+  name     = "wordpress-target-group"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
 }
 
 # HTTP Listener for ALB
@@ -185,7 +185,7 @@ resource "aws_lb_listener" "wordpress_listener" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "fixed-response"
+    type = "fixed-response"
     fixed_response {
       message_body = "Redirecting to HTTPS"
       content_type = "text/plain"
@@ -212,7 +212,7 @@ resource "aws_lb_listener" "wordpress_https_listener" {
 
 # SSL Certificate for ALB
 resource "aws_acm_certificate" "wordpress_certificate" {
-  domain_name = "wordpress.${var.domain_name}"
+  domain_name       = "wordpress.${var.domain_name}"
   validation_method = "DNS"
 }
 
@@ -221,17 +221,17 @@ resource "aws_lb_listener_rule" "https_redirect" {
   listener_arn = aws_lb_listener.wordpress_listener.arn
   priority     = 1
 
-   condition {
+  condition {
     host_header {
       values = ["*"] # Replace with specific hostnames if needed
     }
   }
 
   action {
-    type             = "redirect"
+    type = "redirect"
     redirect {
-      protocol = "HTTPS"
-      port     = "443"
+      protocol    = "HTTPS"
+      port        = "443"
       status_code = "HTTP_301"
     }
   }
