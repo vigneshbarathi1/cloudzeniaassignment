@@ -31,24 +31,35 @@ jobs:
         role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
         aws-region: ${{ secrets.AWS_REGION }}
 
+    # Change working directory to the terraform folder and run Terraform commands
     - name: Terraform Init
-      run: terraform init
+      run: |
+        cd terraform
+        terraform init
 
     - name: Terraform Validate
-      run: terraform validate
+      run: |
+        cd terraform
+        terraform validate
 
     - name: Terraform Format Check
-      run: terraform fmt -check
+      run: |
+        cd terraform
+        terraform fmt -check
 
     - name: Terraform Plan
-      run: terraform plan -out=plan.tfplan
+      run: |
+        cd terraform
+        terraform plan -out=plan.tfplan
 
     - name: Upload Plan Artifact
       uses: actions/upload-artifact@v3
       with:
         name: terraform-plan
-        path: plan.tfplan
+        path: terraform/plan.tfplan
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
-      run: terraform apply -auto-approve plan.tfplan
+      run: |
+        cd terraform
+        terraform apply -auto-approve terraform/plan.tfplan
