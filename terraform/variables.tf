@@ -14,7 +14,7 @@ variable "public_subnet_ids" {
   type        = list(string)
 }
 
-# Domain
+# Domain name
 variable "domain_name" {
   description = "Base domain name for ALB listeners"
   type        = string
