@@ -1,6 +1,6 @@
 # AWS Region and Subnet IDs
 region             = "us-east-1"   # Adjust region
-vpc_id             = "vpc-1234567890abcdef0" VPC ID
+vpc_id             = "vpc-1234567890abcdef0" 
 private_subnet_ids = ["subnet-9876543210abcdef0", "subnet-0123456789abcdef0"]
 public_subnet_ids  = ["subnet-fedcba9876543210"]
 
