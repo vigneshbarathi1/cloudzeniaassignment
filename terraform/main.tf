@@ -152,12 +152,12 @@ resource "aws_security_group" "rds_sg" {
 
 # Security Group Rule to Allow ECS to RDS
 resource "aws_security_group_rule" "ecs_to_rds" {
-  type              = "ingress"
-  from_port         = 3306
-  to_port           = 3306
-  protocol          = "tcp"
- #cidr_blocks       = [aws_security_group.ecs_sg.id]
- #security_group_id = aws_security_group.rds_sg.id
+  type      = "ingress"
+  from_port = 3306
+  to_port   = 3306
+  protocol  = "tcp"
+  #cidr_blocks       = [aws_security_group.ecs_sg.id]
+  #security_group_id = aws_security_group.rds_sg.id
   security_group_id        = aws_security_group.rds_sg.id # The RDS security group
   source_security_group_id = aws_security_group.ecs_sg.id # The ECS security group
 }
@@ -189,7 +189,7 @@ resource "aws_lb_listener" "wordpress_listener" {
   default_action {
     type = "fixed-response"
     fixed_response {
-      status_code = "200
+      status_code  = "200"
       message_body = "Redirecting to HTTPS"
       content_type = "text/plain"
     }
