@@ -1,4 +1,4 @@
-# VPC and Subnet IDs
+# VPC and Subnet ID
 variable "vpc_id" {
   description = "VPC ID"
   type        = string

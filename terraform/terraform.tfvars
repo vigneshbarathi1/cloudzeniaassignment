@@ -1,8 +1,8 @@
 # AWS Region and Subnet IDs
 region             = "us-east-1"                            # Adjust region
-vpc_id             = "vpc-xxxxxxxx"                         # Replace with your VPC ID
-private_subnet_ids = ["subnet-xxxxxxxx", "subnet-yyyyyyyy"] # Replace with your private subnet IDs
-public_subnet_ids  = ["subnet-zzzzzzzz", "subnet-wwwwwwww"] # Replace with your public subnet IDs
+vpc_id             = "10.0.0.0/16"              # Replace with your VPC ID
+private_subnet_ids = "10.0.128.0/20" # s
+public_subnet_ids  =  "10.0.0.0/20"  # s
 
 # Domain Name
 domain_name = "cloudzenassign.com"
