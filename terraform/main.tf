@@ -128,7 +128,7 @@ resource "aws_db_instance" "wordpress_db" {
 
 # DB Subnet Group
 resource "aws_db_subnet_group" "rds_subnet_group" {
-  name       = "wordpress-db-subnet-group"
+  name       = "wordpress-db-subnet-grp"
   subnet_ids = var.private_subnet_ids
 
   tags = {
@@ -164,7 +164,7 @@ resource "aws_security_group_rule" "ecs_to_rds" {
 
 # ALB - Application Load Balancer
 resource "aws_lb" "wordpress_alb" {
-  name                       = "wordpress-alb"
+  name                       = "wordpress-albalancer"
   internal                   = false
   load_balancer_type         = "application"
   security_groups            = [aws_security_group.alb_sg.id]
