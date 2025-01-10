@@ -1,12 +1,10 @@
 # AWS Region and Subnet IDs
 region             = "us-east-1" # Adjust region
-vpc_id             = "vpc-1234567890abcdef0"
-private_subnet_ids = ["subnet-9876543210abcdef0", "subnet-0123456789abcdef0"]
-public_subnet_ids  = ["subnet-fedcba9876543210"]
-
+vpc_id             = "vpc-030e76e428b4261de"
+private_subnet_ids = ["subnet-0794c77e51004c1b1"]
+public_subnet_ids  = ["subnet-0def90a3bd9ce68ea"]
 # Domain Name
 domain_name = "cloudzenassign.com"
-
 # RDS Database Username and Password
 db_username = "wordpress_user"
 db_password = "secure_password" # Use a strong password here
