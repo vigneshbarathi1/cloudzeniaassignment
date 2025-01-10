@@ -1,6 +1,6 @@
 # SecretsManager - Store RDS credentials
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name = "wordpress-db-credentials"
+  name = "wordpress-db-creden"
 
   tags = {
     Name = "WordPress-DB-Credentials"
@@ -112,7 +112,7 @@ resource "aws_db_instance" "wordpress_db" {
   engine                  = "mysql"
   engine_version          = "8.0"
   username                = "wordpress_user"
-  password                = "@admin1"
+  password                = "@admin1234"
   db_name                 = "wordpress"
   allocated_storage       = 20
   multi_az                = false
@@ -156,8 +156,10 @@ resource "aws_security_group_rule" "ecs_to_rds" {
   from_port         = 3306
   to_port           = 3306
   protocol          = "tcp"
-  cidr_blocks       = [aws_security_group.ecs_sg.id]
-  security_group_id = aws_security_group.rds_sg.id
+ #cidr_blocks       = [aws_security_group.ecs_sg.id]
+ #security_group_id = aws_security_group.rds_sg.id
+  security_group_id        = aws_security_group.rds_sg.id # The RDS security group
+  source_security_group_id = aws_security_group.ecs_sg.id # The ECS security group
 }
 
 # ALB - Application Load Balancer
@@ -172,7 +174,7 @@ resource "aws_lb" "wordpress_alb" {
 
 # ALB Target Group
 resource "aws_lb_target_group" "wordpress_target_group" {
-  name     = "wordpress-target-group"
+  name     = "wordpress-target-grp"
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id
@@ -187,6 +189,7 @@ resource "aws_lb_listener" "wordpress_listener" {
   default_action {
     type = "fixed-response"
     fixed_response {
+      status_code = "200
       message_body = "Redirecting to HTTPS"
       content_type = "text/plain"
     }
